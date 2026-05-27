@@ -1,0 +1,6 @@
+{
+  "name": "هشّه - معمول وحلويات منزلية طازجة",
+  "description": "متجر هشة يقدم ألذ وأجود أنواع المعمول والحلويات المنزلية الفاخرة المحضرة بكل حب وشغف يومياً.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
