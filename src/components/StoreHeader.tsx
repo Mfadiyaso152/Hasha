@@ -33,19 +33,29 @@ export default function StoreHeader({
   return (
     <div className="sticky top-0 z-50 w-full bg-transparent h-[72px] pointer-events-none" dir="rtl">
       <motion.div
-        layout
+        animate={{
+          width: isScrolled ? 140 : "100%",
+          maxWidth: isScrolled ? "140px" : "1280px", // max-w-7xl is 1280px
+          height: isScrolled ? 48 : 72,
+          backgroundColor: isScrolled ? "rgba(9, 9, 11, 0.96)" : "rgba(255, 255, 255, 0.96)",
+          borderRadius: isScrolled ? 24 : 0,
+          borderWidth: isScrolled ? 1 : 0,
+          borderBottomWidth: 1,
+          borderColor: isScrolled ? "rgba(63, 63, 70, 0.85)" : "rgba(156, 122, 88, 0.15)", // zinc-700/85 to brand-sand/15
+          boxShadow: isScrolled 
+            ? "0 20px 25px -5px rgba(0, 0, 0, 0.35), 0 8px 10px -6px rgba(0, 0, 0, 0.3)" 
+            : "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+          marginTop: isScrolled ? 10 : 0,
+        }}
         transition={{
           type: "spring",
-          stiffness: 300,
-          damping: 32,
+          stiffness: 350,
+          damping: 28,
+          mass: 0.8,
         }}
-        className={`
-          flex items-center mx-auto pointer-events-auto transition-shadow duration-300
-          ${isScrolled
-            ? "w-[140px] h-12 bg-zinc-950/95 border border-zinc-800/80 rounded-full shadow-2xl justify-center px-4 mt-2.5"
-            : "w-full max-w-7xl h-full bg-white/95 backdrop-blur-md border-b border-brand-sand/40 justify-between px-4 sm:px-6 lg:px-8"
-          }
-        `}
+        className={`flex items-center mx-auto pointer-events-auto overflow-hidden backdrop-blur-md ${
+          isScrolled ? "px-2 justify-center" : "px-4 sm:px-6 lg:px-8 justify-between"
+        }`}
       >
         <AnimatePresence mode="wait">
           {!isScrolled ? (
