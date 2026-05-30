@@ -6,13 +6,13 @@
 import { Category, Product, CustomerReview } from "./types";
 
 // Import the real generated image paths from our generation tool
-import maamoulHeroImage from "./assets/images/maamoul_hero_1779895819732.png";
-import maamoulDatesImage from "./assets/images/real_maamoul_dates_1779902098632.png";
-import maamoulPistachioImage from "./assets/images/real_maamoul_pistachio_box_1779902244506.png";
-import jozeyaBoxImage from "./assets/images/real_jozeya_box_1779902184445.png";
-import petitsFoursBoxImage from "./assets/images/real_petits_fours_box_1779902203083.png";
-import maamoulWalnutBoxImage from "./assets/images/real_maamoul_walnut_box_1779902222189.png";
-import mixedBoxImage from "./assets/images/real_mixed_box_1779902266372.png";
+import maamoulDatesImage from "./assets/images/real_maamoul_dates_1779902098632-1.png";
+import maamoulPistachioImage from "./assets/images/real_maamoul_pistachio_box_1779902244506-1.png";
+import jozeyaBoxImage from "./assets/images/real_jozeya_box_1779902184445-1.png";
+import petitsFoursBoxImage from "./assets/images/real_petits_fours_box_1779902203083-1.png";
+import maamoulWalnutBoxImage from "./assets/images/real_maamoul_walnut_box_1779902222189-1.png";
+import mixedBoxImage from "./assets/images/real_mixed_box_1779902266372-1.png";
+import kibbehImage from "./assets/images/real_kibbeh_box_1780143492011-1.png";
 
 export const CUSTOMER_CONTACT = {
   phone: "0536370589",
@@ -23,7 +23,7 @@ export const CUSTOMER_CONTACT = {
   address: "الرياض، المملكة العربية السعودية",
   storeTimes: "يومياً من الساعة 2:00 ظهراً حتى 10:00 مساءً",
   ibanBank: "بنك الراجحي",
-  ibanValue: "SA74 8000 0539 6080 1800 2790"
+  ibanValue: "SA7480000539608018002790"
 };
 
 export const CATEGORIES: Category[] = [
@@ -153,6 +153,21 @@ export const PRODUCTS: Product[] = [
     pieceCount: 24,
     sweetnessLevel: 2,
     sweetnessDesc: ""
+  },
+  {
+    id: "kibbeh",
+    categoryId: "all",
+    name: "كبة",
+    description: "كبة لحم مقرمشة ولذيذة تُحضّر طازجة بأفضل المكونات البلدية والبهارات الشرقية الفاخرة.",
+    price: 3,
+    image: kibbehImage,
+    rating: 5.0,
+    reviewsCount: 198,
+    ingredients: ["لحم بلدي طازج", "برغل منقى", "بصل وبقدونس", "مكسرات فاخرة", "بهارات هشة الخاصة"],
+    weight: "حبة واحدة",
+    pieceCount: 1,
+    sweetnessLevel: 1,
+    sweetnessDesc: "مالحة وطازجة"
   }
 ];
 

@@ -33,16 +33,21 @@ export default function CheckoutModal({
   
   // Feedback states
   const [errorText, setErrorText] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyIban = () => {
+    navigator.clipboard.writeText("SA7480000539608018002790");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0
   );
   
-  // We can assume a fixed reasonable delivery fee if delivery is chosen (e.g. 30), or just show items total.
-  // Let's set a standard delivery fee of 30 SAR.
-  const activeDeliveryFee = deliveryMethod === "delivery" ? 30 : 0;
-  const finalTotalAmount = subtotal + activeDeliveryFee;
+  // Delivery price is determined via WhatsApp.
+  const finalTotalAmount = subtotal;
 
   const handleApplyOrder = () => {
     // 1. Validations
@@ -86,7 +91,7 @@ export default function CheckoutModal({
 *تفاصيل المنتجات:*
 ${linesStr}
 
-*السعر النهائي بالموقع:* ${finalTotalAmount} ريال
+*السعر النهائي بالموقع:* ${finalTotalAmount} ريال ${deliveryMethod === "delivery" ? "\n*(سعر التوصيل يتحدد بالواتساب)*" : ""}
 *التاريخ المطلق للتسليم:* ${deliveryDate}
 *طريقة الاستلام:* ${arabicDelivery}
 ${deliveryMethod === "delivery" ? `*موقع البيت بالتفصيل:* ${address}` : ""}
@@ -195,7 +200,14 @@ ${notes.trim() ? `ملاحظة: ${notes}` : ""}`;
                       value={deliveryDate}
                       onChange={(e) => setDeliveryDate(e.target.value)}
                       className="w-full px-3 py-2 border border-brand-sand text-xs rounded-lg bg-white text-brand-chocolate focus:ring-1 focus:ring-brand-gold focus:outline-none text-right"
-                      min={new Date().toISOString().split("T")[0]}
+                      min={(() => {
+                        const tomorrow = new Date();
+                        tomorrow.setDate(tomorrow.getDate() + 1);
+                        const yyyy = tomorrow.getFullYear();
+                        const mm = String(tomorrow.getMonth() + 1).padStart(2, "0");
+                        const dd = String(tomorrow.getDate()).padStart(2, "0");
+                        return `${yyyy}-${mm}-${dd}`;
+                      })()}
                     />
                   </div>
                 </div>
@@ -234,19 +246,33 @@ ${notes.trim() ? `ملاحظة: ${notes}` : ""}`;
 
                   {deliveryMethod === "delivery" ? (
                     <div className="pt-2">
-                      <label className="block text-[10px] font-bold text-zinc-600 mb-1">موقع البيت بالتفصيل (الحي - الشارع - رقم المنزل) <span className="text-red-500">*</span></label>
+                      <label className="block text-[10px] font-black text-[#5C452D] mb-1">
+                        🚚 موقع بيتك بالتفصيل (الحي - الشارع - رقم المنزل) <span className="text-red-500">*</span>
+                      </label>
                       <textarea
                         rows={2}
-                        placeholder="فضلاً اكتب هنا موقع بيتك / تفاصيل العنوان كاملة لنتمكن من إيصال طلبك وحساب سعر التوصيل بالواتساب"
+                        placeholder="فضلاً اكتب هنا موقع بيتك / تفاصيل العنوان كاملة لنصلك بدقة ونرتّب التوصيل الفوري"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
-                        className="w-full p-2 border border-brand-sand text-xs rounded-lg bg-white text-brand-chocolate focus:outline-none focus:ring-1 focus:ring-brand-gold"
+                        className="w-full p-2.5 border border-brand-sand text-xs rounded-lg bg-white text-brand-chocolate focus:outline-none focus:ring-1 focus:ring-brand-gold font-medium"
                       />
                     </div>
                   ) : (
-                    <div className="bg-amber-50/50 p-3 rounded-lg border border-amber-100 text-[10px] text-brand-chocolate leading-relaxed">
-                      📍 <strong>استلام شخصي من موقعنا في الرياض:</strong>
-                      <p className="mt-0.5 text-zinc-600">سنقوم بمشاركة لوكيشن المتجر والتنسيق معك مباشرة عبر الواتساب فور إرسال الطلب.</p>
+                    <div className="bg-amber-50/50 p-4 rounded-lg border border-amber-120/40 text-[11px] text-brand-chocolate leading-relaxed space-y-2">
+                      <p className="font-extrabold flex items-center gap-1">📍 موقع الاستلام بالرياض:</p>
+                      <div className="bg-white p-3 rounded-lg border border-brand-sand/50 space-y-1">
+                        <p className="font-extrabold text-brand-chocolate text-xs">شارع مهور، حي السويدي، الرياض</p>
+                      </div>
+                      <div className="pt-1">
+                        <a
+                          href="https://maps.google.com/?q=شارع+مهور+حي+السويدي+الرياض"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-chocolate hover:bg-brand-gold text-white text-[10px] font-black rounded-lg shadow-xs transition-colors cursor-pointer"
+                        >
+                          🗺️ فتح الموقع على قوقل ماب (Google Maps)
+                        </a>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -284,13 +310,34 @@ ${notes.trim() ? `ملاحظة: ${notes}` : ""}`;
                   </div>
 
                   {paymentMethod === "transfer" ? (
-                    <div className="bg-blue-50/50 border border-blue-100 p-3 rounded-lg text-[11px] text-blue-800 leading-relaxed space-y-1">
-                      <p className="font-extrabold flex items-center gap-1">🏦 طريقة التحويل البنكي:</p>
-                      <p className="text-zinc-600">سيتم تزويدكم بآيبان بنك الراجحي وتفاصيل الحساب لإكمال التحويل فور تأكيد طلبك ومتابعتك للمحادثة على الواتساب مع خدمة العملاء لراحة وسهولة أكبر بالنسبة لك.</p>
+                    <div className="bg-blue-50/40 border border-blue-100 p-3.5 rounded-lg text-[11px] text-blue-950 leading-relaxed space-y-2">
+                      <p className="font-extrabold flex items-center gap-1">🏦 معلومات الحساب التجاري والتحويل البنكي:</p>
+                      <div className="bg-white p-3 rounded-lg border border-blue-100 space-y-2 text-xs">
+                        <div className="flex justify-between items-center">
+                          <span className="font-bold text-zinc-500 text-[10px]">البنك:</span>
+                          <span className="font-black text-blue-900">مصرف الراجحي (Al Rajhi Bank)</span>
+                        </div>
+                        <div className="border-t border-zinc-100 pt-2 flex flex-col gap-1">
+                          <span className="font-bold text-zinc-500 text-[10px]">رقم الآيبان (IBAN):</span>
+                          <div className="flex items-center justify-between bg-zinc-50 p-2 rounded border border-zinc-200">
+                            <code className="text-zinc-800 font-mono font-black select-all text-[11px] tracking-wider">SA7480000539608018002790</code>
+                            <button
+                              type="button"
+                              onClick={handleCopyIban}
+                              className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-black rounded shadow-xs cursor-pointer transition-colors active:scale-95"
+                            >
+                              {copied ? "✓ تم نسخ الآيبان" : "نسخ ايبان"}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <p className="text-zinc-500 text-[9px] leading-relaxed">
+                        * فضلاً قم بتحويل مبلغ الطلب ومشاركة لقطة التحويل على الواتس اب لتجهيز وتوصيل طلبك فوراً وبأتم سرعة وسهولة.
+                      </p>
                     </div>
                   ) : (
                     <div className="bg-emerald-50/50 border border-emerald-100 p-3 rounded-lg text-[11px] text-emerald-800">
-                      <p className="font-semibold">💵 تفضل بالدفع كاش أو شبكة يدوياً مباشرة عند الاستلام!</p>
+                      <p className="font-semibold">💵 تفضل بالدفع كاش يدوياً عند الاستلام!</p>
                     </div>
                   )}
                 </div>
@@ -317,13 +364,15 @@ ${notes.trim() ? `ملاحظة: ${notes}` : ""}`;
                   </div>
                   <div className="flex justify-between">
                     <span>رسوم التوصيل المقدرة:</span>
-                    <span className="font-bold text-brand-chocolate">
-                      {deliveryMethod === "delivery" ? "30 ريال (محدد)" : "مجاني (استلام من موقع)"}
+                    <span className="font-bold text-[#9C7A58]">
+                      {deliveryMethod === "delivery" ? "يتحدد بالواتساب" : "مجاني (استلام من موقع)"}
                     </span>
                   </div>
                   <div className="flex justify-between border-t border-brand-sand/40 pt-2 text-sm font-black text-brand-chocolate">
                     <span>السعر النهائي بالموقع:</span>
-                    <span className="text-base text-[#9C7A58] font-black">{finalTotalAmount} ريال سعودي</span>
+                    <span className="text-base text-[#9C7A58] font-black">
+                      {finalTotalAmount} ريال سعودي {deliveryMethod === "delivery" && <span className="text-[10px] font-normal text-zinc-500">(غير شامل التوصيل)</span>}
+                    </span>
                   </div>
                 </div>
               </div>

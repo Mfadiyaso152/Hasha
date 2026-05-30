@@ -4,7 +4,7 @@
  */
 
 import { useState, useMemo } from "react";
-import { Cookie, ShoppingBag } from "lucide-react";
+import { Cookie, ShoppingBag, Sparkles } from "lucide-react";
 import { PRODUCTS } from "./data";
 import { Product, CartItem } from "./types";
 import StoreHeader from "./components/StoreHeader";
@@ -98,6 +98,10 @@ export default function App() {
         {/* Simple Minimalist Greeting Announcement */}
         <section className="bg-[#FAF9F6] border-b border-brand-sand/40 py-10 px-4">
           <div className="max-w-xl mx-auto text-center space-y-2.5">
+            <div className="inline-flex items-center gap-1.5 bg-brand-gold/10 text-brand-chocolate px-3 py-1 rounded-full text-xs font-bold border border-brand-gold/20">
+              <Sparkles className="w-3.5 h-3.5 text-brand-gold animate-spin-slow" />
+              <span>نخبز يومياً بكل حب وفن 🇸🇦</span>
+            </div>
             <h2 className="text-2xl sm:text-3xl font-black text-brand-chocolate tracking-tight">
               متجر هشة للحلويات
             </h2>
@@ -109,17 +113,14 @@ export default function App() {
 
         {/* Product Catalog Stage */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10" id="catalog-section">
+
           {/* Catalog Title Block */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-brand-sand/40 pb-5 mb-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-brand-sand/40 pb-5 mb-8" dir="rtl">
             <div>
               <h3 className="text-lg sm:text-xl font-black text-brand-chocolate flex items-center gap-2">
                 <Cookie className="w-5 h-5 text-brand-chocolate" />
-                <span>قائمة المخبوزات والحلويات</span>
+                <span>قائمة المنتجات</span>
               </h3>
-            </div>
-            
-            <div className="text-xs font-semibold text-brand-chocolate-light bg-[#F4F4F5] px-3 py-1 rounded-full border border-brand-sand/60">
-              متوفر حالياً: <strong className="text-brand-chocolate">{PRODUCTS.length}</strong> أصناف شهية
             </div>
           </div>
 
